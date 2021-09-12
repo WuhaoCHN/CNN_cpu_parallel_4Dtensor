@@ -22,8 +22,6 @@ void convolution(float** bottom,
         im2col(bottom[i], channels, height, width, ksize, stride, pad, col[i]);
         float alpha = 1.0;
         float beta = 1.0;
-  //      cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans,
-   //         col_height, koutput, col_width, alpha, col[i], col_width, kernel, col_width, beta, conv_out[i], koutput);
         cblas_sgemm(CblasRowMajor, CblasNoTrans, CblasTrans,
             koutput, col_height, col_width, alpha, kernel, col_width, col[i], col_width, beta, conv_out[i], col_height);
     }

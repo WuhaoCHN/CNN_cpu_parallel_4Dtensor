@@ -42,6 +42,7 @@ void fused_conv(float** bottom,
                 }
         mkl_free(col[i]);
     }
+    mkl_free(col);
 }
 
 
@@ -82,4 +83,5 @@ void fused_conv_cpu(float** bottom,
                 }
         mkl_free(col[i]);
     }
+    mkl_free(col);
 }

@@ -186,11 +186,14 @@ int main()
 
     for (int i = 0; i < batchsize; ++i)
         mkl_free(img[i]);
+    mkl_free(img);
     mkl_free(k2col);
     for (int i = 0; i < batchsize; ++i)
         mkl_free(result[i]);
+    mkl_free(result);
     for (int i = 0; i < batchsize; ++i)
         mkl_free(feature_p[i]);
+    mkl_free(feature_p);
     system("PAUSE");
     return 0;
 }

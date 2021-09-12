@@ -29,6 +29,7 @@ void convolution(float** bottom,
             koutput, col_height, col_width, alpha, kernel, col_width, col[i], col_width, beta, conv_out[i], col_height);
         mkl_free(col[i]);
     }
+    mkl_free(col);
 }
 
 
@@ -56,4 +57,5 @@ void convolution_cpu(float** bottom,
             koutput, col_height, col_width, alpha, kernel, col_width, col[i], col_width, beta, conv_out[i], col_height);
         mkl_free(col[i]);
     }
+    mkl_free(col);
 }

@@ -34,8 +34,9 @@ void fused_conv(float** bottom,
                 {
                     for (int k = 0; k < pooling_num; ++k)
                         for (int j = 0; j < pooling_num; ++j)
+                            //pooling
                             result_p[i][(c * height_p + row) * width_p + col] = max(result_p[i][(c * height_p + row) * width_p + col], conv_out[i][(c * height_out + row * pooling_num + k) * width_out + col * pooling_num + j]);
-                    // pooling and relu fused.
+                    //relu.
                     result_p[i][(c * height_p + row) * width_p + col] = result_p[i][(c * height_p + row) * width_p + col] > 0 ? result_p[i][(c * height_p + row) * width_p + col] : 0;
                 }
  

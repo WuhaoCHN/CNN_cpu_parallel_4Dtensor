@@ -14,17 +14,16 @@ int main()
 {
     cout << "Please enter the size of img data(width, height, channel, batchsize):" << endl;
     //Initialize the input image
+ //   double startTime, endTime;
     int width, height, channel, batchsize;
     cin >> width >> height >> channel >> batchsize;
     int pixels = width * height * channel;
     float** img = (float**)mkl_malloc(batchsize * sizeof(float), 4);
-  //  float** img = new float* [batchsize];
-    cout << "Please enter the image data: " << endl;
+    cout << "Please enter the image data: " << endl; 
 
     for (int i = 0; i < batchsize; ++i)
     {
         img[i] = (float*)mkl_malloc(pixels * sizeof(float), 32);
-     //   img[i] = new float[pixels];
         for (int j = 0; j < pixels; ++j)
             cin >> img[i][j];
     }
@@ -44,7 +43,7 @@ int main()
     cout << "Please enter the bias:" << endl;
     float bias;
     cin >> bias;
-    cout << "Please enter the weights of convolutional kernel: " << endl;
+    cout << "Please enter the weights of convolutional kernel: " << endl; 
 
     float* k2col = (float*)mkl_malloc((koutput * weights) * sizeof(float), 32);
     for (int i = 0; i < koutput * weights; ++i)
@@ -69,8 +68,8 @@ int main()
     float** feature_p = (float**)mkl_malloc(batchsize * sizeof(float), 4);
     for (int i = 0; i < batchsize; ++i)
     {
-        feature_p[i] = (float*)mkl_malloc((pixels / (pooling_num * pooling_num)) * sizeof(float), 32);
-        for (int j = 0; j < (pixels / (pooling_num * pooling_num)); ++j)
+        feature_p[i] = (float*)mkl_malloc(((sum_out*koutput) / (pooling_num * pooling_num)) * sizeof(float), 32);
+        for (int j = 0; j < ((sum_out*koutput) / (pooling_num * pooling_num)); ++j)
             feature_p[i][j] = -FLT_MAX;
     }
    
@@ -115,8 +114,14 @@ int main()
     }
     cout << endl;
     */
+ //   startTime = omp_get_wtime();
     convolution(img, channel, height, width, batchsize, ksize, koutput, stride, pad, bias, k2col, result);
+ //   endTime = omp_get_wtime();
     cout << endl;
+ //   cout << "Time consumed by convolution layer : " << endTime - startTime << endl;
+    for (int i = 0; i < batchsize; ++i)
+        mkl_free(img[i]);
+    mkl_free(k2col);
     cout << "Convolution layer output :" << endl;
     for (int i = 0; i < batchsize; ++i)
     {
@@ -133,9 +138,15 @@ int main()
                     printf("%5.2f\t", result[i][(j * height_out + k)*width_out + l]);
             }
         }
-    }
+    } 
+
+ //   startTime = omp_get_wtime();
     Relu(result, batchsize, sum_out * koutput);
+ //   endTime = omp_get_wtime();
     cout << endl;
+ //   cout << "Time consumed by Relu layer : " << endTime - startTime << endl;
+
+    
     cout << " Relu layer output:" << endl;
     for (int i = 0; i < batchsize; ++i)
     {
@@ -152,10 +163,20 @@ int main()
                     printf("%5.2f\t", result[i][(j * height_out + k) * width_out + l]);
             }
         }
-    }
+    } 
     cout << endl;
-    cout << "Pooling layer output: " << endl;
+    cout << "Pooling layer output: " << endl;  
+
+
+
+ //   startTime = omp_get_wtime();
     pooling(result, batchsize, width_out, height_out, koutput, pooling_num, feature_p);
+ //   endTime = omp_get_wtime();
+    cout << endl;
+ //   cout << "Time consumed by Pooling layer : " << endTime - startTime << endl;
+
+
+    
     for (int i = 0; i < batchsize; ++i)
     {
         cout << endl;
@@ -172,11 +193,11 @@ int main()
             }
         }
     }
-    cout << endl; 
-    mkl_free(feature_p);
-    mkl_free(result);
-    mkl_free(k2col);
-    mkl_free(img);
+    cout << endl;  
+    for (int i = 0; i < batchsize; ++i)
+        mkl_free(result[i]);
+    for (int i = 0; i < batchsize; ++i)
+        mkl_free(feature_p[i]);
     system("PAUSE");
     return 0;
 }

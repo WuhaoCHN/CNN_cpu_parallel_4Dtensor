@@ -119,9 +119,6 @@ int main()
  //   endTime = omp_get_wtime();
     cout << endl;
  //   cout << "Time consumed by convolution layer : " << endTime - startTime << endl;
-    for (int i = 0; i < batchsize; ++i)
-        mkl_free(img[i]);
-    mkl_free(k2col);
     cout << "Convolution layer output :" << endl;
     for (int i = 0; i < batchsize; ++i)
     {
@@ -194,10 +191,14 @@ int main()
         }
     }
     cout << endl;  
+
     for (int i = 0; i < batchsize; ++i)
         mkl_free(result[i]);
     for (int i = 0; i < batchsize; ++i)
         mkl_free(feature_p[i]);
+    for (int i = 0; i < batchsize; ++i)
+        mkl_free(img[i]);
+    mkl_free(k2col);
     system("PAUSE");
     return 0;
 }

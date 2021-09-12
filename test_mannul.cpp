@@ -193,12 +193,15 @@ int main()
     cout << endl;  
 
     for (int i = 0; i < batchsize; ++i)
+        mkl_free(img[i]);
+    mkl_free(img);
+    mkl_free(k2col);
+    for (int i = 0; i < batchsize; ++i)
         mkl_free(result[i]);
+    mkl_free(result);
     for (int i = 0; i < batchsize; ++i)
         mkl_free(feature_p[i]);
-    for (int i = 0; i < batchsize; ++i)
-        mkl_free(img[i]);
-    mkl_free(k2col);
+    mkl_free(feature_p);
     system("PAUSE");
     return 0;
 }

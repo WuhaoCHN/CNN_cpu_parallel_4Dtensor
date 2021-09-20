@@ -8,4 +8,4 @@ Forward CNNs is implemented in C++. The input data(width, height, channel, batch
 5. File `DirectCNN_SIMD` is direct convolution without using im2col.
 6. File `im2col+gemm` is indirect convolution using matrix-matrix multiplication.
 7. File `NaiveMethod` is the most basic sliding window algorithm, used as a comparation.
-8. `Report.docx` changed on 2021.9.19 .
+8. `Report.docx` modified on 2021.9.19 .

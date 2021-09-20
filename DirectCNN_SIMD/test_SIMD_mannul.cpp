@@ -36,12 +36,12 @@ int main()
 					if (l < pad || width - l - 1 < pad || k < pad || height - k - 1 < pad)
 						img[i][j * height * width + k * width + l] = 0;
 					else
-						img[i][j * height * width + k * width + l] = 0.1;
+						cin >> img[i][j * height * width + k * width + l];
 					//	cin >> img[i][j * height * width + k * width + l];
 				}
 	} 
 //	int channel_re	 = (channel / 4) + bool(channel % 4);
-	//channel方向上pad0 使得channel 能被4整除
+	//channel鏂瑰悜涓妏ad0 浣垮緱channel 鑳借4鏁撮櫎
 	int channel_re;
 	if (channel % 4)
 		channel_re = ((channel / 4) + 1) * 4;
@@ -67,7 +67,6 @@ int main()
 		delete[]img[i];
 	delete[]img;
 
-
 	int pix_per_channel_re = channel_re / 4;
 	__m128** img_mm = new __m128 * [batchsize];
 	for (int i = 0; i < batchsize; ++i)
@@ -85,7 +84,6 @@ int main()
 	for (int i = 0; i < batchsize; ++i)
 		delete[]img_re[i];
 	delete[]img_re;
-
 
 	//kernel
 	int ksize, kchannel, kchannel_re, knumber, stride;
@@ -108,7 +106,7 @@ int main()
 	float* kernel = new __declspec(align(32)) float[weights];
 	for (int i = 0; i < weights; ++i)
 		//	cin >> kernel[i];
-		kernel[i] = 1;
+		cin >> kernel[i];
 	float* kernel_re = new __declspec(align(32)) float[ksize * ksize * kchannel_re * knumber];
 	for(int i = 0 ; i < knumber; ++i)
 		for(int j = 0; j < ksize; ++j)
@@ -136,8 +134,6 @@ int main()
 		for (int j = 0; j < owidth * oheight * ochannel; ++j)
 			output[i][j] = bias;
 	}
-
-
 	//convolution
 	startTime = omp_get_wtime();
 	convolution_cpu(img_mm, channel, height, width, batchsize, ksize, knumber, stride, bias, kernel_mm, output);
@@ -162,10 +158,7 @@ int main()
 					printf("%5.2f\t", output[i][j * oheight * owidth + k * owidth + l]);
 			}
 		}
-
 	} 
-
-
 	int ochannel_re;
 	if (ochannel % 4)
 		ochannel_re = ((ochannel / 4) + 1) * 4;
@@ -188,7 +181,6 @@ int main()
 			
 	}
 	int pix_per_ochannel_re = ochannel_re / 4;
-
 
 	__m128** output_mm = new __m128 * [batchsize];
 	for (int i = 0; i < batchsize; ++i)
@@ -217,7 +209,6 @@ int main()
 			float __declspec(align(32)) am[4] = { 0,0,0,0 };
 			pout[i][j] = _mm_load_ps(am);
 		}
-			
 	}
 
 	startTime = omp_get_wtime();
@@ -226,8 +217,13 @@ int main()
 	cout << endl;
 	cout << "Time consumed by Pooling layer using SIMD: " << endTime - startTime << endl;
 
-	cout << endl;
 	cout << "The output of pooling layer: " << endl;
+	float** p_out = new float* [batchsize *pheight *pwidth* pix_per_ochannel_re];
+	for (int i = 0; i < batchsize * pheight * pwidth * pix_per_ochannel_re; ++i)
+	{
+		p_out[i] = new __declspec(align(16)) float[4];
+		_mm_store_ps(p_out[i], pout[i / (pwidth * pheight * pix_per_ochannel_re)][i % (pwidth * pheight * pix_per_ochannel_re)]);
+	}
 	for (int i = 0; i < batchsize; ++i)
 	{
 		cout << endl;
@@ -240,10 +236,14 @@ int main()
 			{
 				cout << endl;
 				for (int l = 0; l < pwidth; ++l)
-					printf("%5.2f\t", pout[i][j * pheight * pwidth + k * pwidth + l]);
+					printf("%5.2f\t", p_out[i * pheight * pwidth + k * pwidth + l][j]);
 			}
 		}
 	}
+
+	for (int i = 0; i < batchsize * pheight * pwidth * pix_per_ochannel_re; ++i)
+		delete[]p_out[i];
+	delete[]p_out;
 
 	float** pooling_out = new float* [batchsize];
 	for (int i = 0; i < batchsize; ++i)
@@ -252,7 +252,6 @@ int main()
 		for (int j = 0; j < pwidth * pheight * knumber; ++j)
 			pooling_out[i][j] = 0;
 	}
-
 	for (int i = 0; i < batchsize; ++i)
 	{
 		for (int j = 0; j < owidth * oheight * ochannel; ++j)
@@ -267,9 +266,11 @@ int main()
 
 
 	for (int i = 0; i < batchsize; ++i)
+		delete[]output_re[i];
+	delete[]output_re;
+	for (int i = 0; i < batchsize; ++i)
 		delete[]img_mm[i];
 	delete[]img_mm;
-
 	for (int i = 0; i < batchsize; ++i)
 		delete[]pooling_out[i];
 	delete[]pooling_out;

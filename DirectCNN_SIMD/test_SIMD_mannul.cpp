@@ -72,7 +72,7 @@ int main()
 	for (int i = 0; i < batchsize; ++i)
 	{
 //		img_mm[i] = new __declspec(align(128)) __m128[width * height];
-		img_mm[i] = new __declspec(align(32)) __m128[width * height];
+		img_mm[i] = new __declspec(align(16)) __m128[width * height];
 
 
 		for (int j = 0; j < width * height; ++j) //channel_re
@@ -103,11 +103,11 @@ int main()
 	cin >> pnumber;
 	cout << "Please enter the weights of convolutuonal kernel: " << endl;
 	int weights = ksize * ksize * kchannel * knumber;
-	float* kernel = new __declspec(align(32)) float[weights];
+	float* kernel = new __declspec(align(16)) float[weights];
 	for (int i = 0; i < weights; ++i)
 		//	cin >> kernel[i];
 		cin >> kernel[i];
-	float* kernel_re = new __declspec(align(32)) float[ksize * ksize * kchannel_re * knumber];
+	float* kernel_re = new __declspec(align(16)) float[ksize * ksize * kchannel_re * knumber];
 	for(int i = 0 ; i < knumber; ++i)
 		for(int j = 0; j < ksize; ++j)
 			for(int k = 0; k < ksize; ++k)
@@ -119,7 +119,7 @@ int main()
 						kernel_re[i * kchannel_re * ksize * ksize + j * kchannel_re * ksize + k * kchannel_re + l] = 0;
 				}
 	delete[] kernel;
-	__m128* kernel_mm = new __declspec(align(32)) __m128[ksize * ksize * knumber];
+	__m128* kernel_mm = new __declspec(align(16)) __m128[ksize * ksize * knumber];
 	for (int i = 0; i < ksize * ksize * knumber; ++i)
 		kernel_mm[i] = _mm_load_ps(&kernel_re[4 * i]);
 	delete[] kernel_re;
@@ -130,7 +130,7 @@ int main()
 	float** output = new float* [batchsize];
 	for (int i = 0; i < batchsize; ++i)
 	{
-		output[i] = new __declspec(align(32)) float[owidth * oheight * ochannel];
+		output[i] = new __declspec(align(16)) float[owidth * oheight * ochannel];
 		for (int j = 0; j < owidth * oheight * ochannel; ++j)
 			output[i][j] = bias;
 	}
@@ -185,7 +185,7 @@ int main()
 	__m128** output_mm = new __m128 * [batchsize];
 	for (int i = 0; i < batchsize; ++i)
 	{
-		output_mm[i] = new __declspec(align(32)) __m128[owidth * oheight*pix_per_ochannel_re];
+		output_mm[i] = new __declspec(align(16)) __m128[owidth * oheight*pix_per_ochannel_re];
 		for (int j = 0; j < oheight * owidth; ++j)
 			for (int k = 0; k < pix_per_ochannel_re; ++k)
 			{
@@ -203,10 +203,10 @@ int main()
 	__m128** pout = new __m128 * [batchsize];
 	for (int i = 0; i < batchsize; ++i)
 	{
-		pout[i] = new __declspec(align(32)) __m128[pwidth * pheight * pix_per_ochannel_re];
+		pout[i] = new __declspec(align(16)) __m128[pwidth * pheight * pix_per_ochannel_re];
 		for (int j = 0; j < pwidth * pheight * pix_per_ochannel_re; ++j)
 		{
-			float __declspec(align(32)) am[4] = { 0,0,0,0 };
+			float __declspec(align(16)) am[4] = { 0,0,0,0 };
 			pout[i][j] = _mm_load_ps(am);
 		}
 	}
@@ -248,7 +248,7 @@ int main()
 	float** pooling_out = new float* [batchsize];
 	for (int i = 0; i < batchsize; ++i)
 	{
-		pooling_out[i] = new __declspec(align(32)) float[pwidth * pheight * knumber];
+		pooling_out[i] = new __declspec(align(16)) float[pwidth * pheight * knumber];
 		for (int j = 0; j < pwidth * pheight * knumber; ++j)
 			pooling_out[i][j] = 0;
 	}

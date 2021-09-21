@@ -25,7 +25,7 @@ void convolution(__m128** bottom, int channel, int height, int width, int batchs
 			for (int k = 0; k < oheight; ++k)
 				for (int l = 0; l < owidth; ++l)
 				{
-					float __declspec(align(16)) op[4] = { 0,0,0,0 };
+					__declspec(align(16)) float op[4] = { 0,0,0,0 };
 					__m128 temp = _mm_loadu_ps(op);
 					int o_di = j * sum_piece + k * owidth + l;
 					for (int n = 0; n < ksize; ++n)
@@ -70,7 +70,7 @@ void convolution_cpu(__m128** bottom, int channel, int height, int width, int ba
 			for (int k = 0; k < oheight; ++k)
 				for (int l = 0; l < owidth; ++l)
 				{
-					float __declspec(align(16)) op[4] = { 0,0,0,0 };
+					__declspec(align(16)) float op[4] = { 0,0,0,0 };
 					__m128 temp = _mm_loadu_ps(op);
 					int o_di = j * sum_piece + k * owidth + l;
 					for (int n = 0; n < ksize; ++n)

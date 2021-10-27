@@ -6,6 +6,7 @@
 #include "im2col.h"
 #include "mkl.h"
 
+
 void convolution(float** bottom,
     int channels, int height, int width, int batchsize,
     int ksize,int koutput, int stride, int pad, float bias, float* kernel, float** conv_out)

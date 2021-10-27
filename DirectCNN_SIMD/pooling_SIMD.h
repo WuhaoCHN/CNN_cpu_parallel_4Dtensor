@@ -17,6 +17,7 @@ void pooling(__m128** bottom, int width, int height, int batchsize, int pnum,  _
 					}
 }
 
+
 void pooling_cpu(__m128** bottom, int width, int height, int batchsize, int pnum, __m128** pout)
 {
 	int pwidth = width / pnum;

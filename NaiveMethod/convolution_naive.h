@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <omp.h>
 
+
 void convolution(float* bottom, int channel, int height, int width, int batchsize, 
 	int ksize, int knumber, int stride, float bias, float* kernel, float* output)
 {

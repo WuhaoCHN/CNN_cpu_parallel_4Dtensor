@@ -1,4 +1,4 @@
-# Intel Test Updated at 2021.9.19
+# Updated at 2021.10.27
 Forward CNNs is implemented in C++. The input data(width, height, channel, batch-size) and convolution kernels(width, height, channel, kernel number) are 4d tensors.
 ## Introduction
 1. The screenshorts of the experiment results are in `Test_results` folder.

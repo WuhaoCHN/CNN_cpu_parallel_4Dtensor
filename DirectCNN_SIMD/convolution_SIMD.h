@@ -1,6 +1,7 @@
 #pragma once
 #include <omp.h>
 
+
 void convolution(__m128** bottom, int channel, int height, int width, int batchsize, int ksize, int knumber,
 	int stride, float bias, __m128* kernel, float** output)
 {

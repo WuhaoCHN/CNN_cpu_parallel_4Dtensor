@@ -11,6 +11,7 @@
 #include "fused_conv_relu_pooling_SIMD.h"
 using namespace std;
 
+
 int main()
 {
 	cout << "Please enter the size of img data(width, height, channel, batchsize):" << endl;

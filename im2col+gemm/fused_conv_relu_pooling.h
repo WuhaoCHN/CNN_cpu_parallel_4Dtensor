@@ -45,7 +45,6 @@ void fused_conv(float** bottom,
     mkl_free(col);
 }
 
-
 void fused_conv_cpu(float** bottom,
     int channels, int height, int width, int batchsize,
     int ksize, int koutput, int stride, int pad, float bias, float* kernel, int pooling_num, float** conv_out, float** result_p)

@@ -23,6 +23,7 @@ void pooling(float** bottom, int batchsize, int width, int height, int channel, 
 				}
 }
 
+
 void pooling_cpu(float** bottom, int batchsize, int width, int height, int channel, int pooling_num,
 	float** result_p)
 {
